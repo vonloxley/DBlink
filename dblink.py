@@ -4,6 +4,18 @@ import cloudscraper
 from airium import Airium
 from urllib.parse import urlparse
 
+def writetofile(apath: str, filename: str, extension: str, content: str) -> None:
+    if not extension.startswith('.'):
+        extension = '.' + extension
+    filename = "".join(x for x in filename if x.isalnum())
+    file = path.normpath(path.join(apath, filename) + extension)
+    i=1
+    while (path.exists(file)):
+        file = path.normpath(path.join(apath, filename + '-' + str(i) + extension))
+        i+=1
+    with open(file,'wt') as f:
+        f.write(content)
+
 def scrape(url: str):
     scraper = cloudscraper.create_scraper()
     return scraper.get(url)
@@ -27,9 +39,9 @@ def pbookpage(html: bs4.BeautifulSoup, context):
                         a(d)
                 except KeyError:
                     pass
-    with open(path.normpath('out/'+"".join(x for x in context['title'] if x.isalnum())+'.html'),'wt') as f:
-        f.write(str(a))
-
+    
+    writetofile('out', context['title'], 'html',str(a))
+    
 def pstartpage(html: bs4.BeautifulSoup, context):
     context['header'] = html.find('div', {'class':'daily-book__header'})
     for ha3 in context['header'].find_all('h3'):
