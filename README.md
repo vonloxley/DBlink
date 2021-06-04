@@ -4,7 +4,7 @@ Download Blinks of the day.
 
 Install
 -------
-Run `pip -r requirements`.
+Run `pip -r requirements.txt`.
 
 Run
 ---
