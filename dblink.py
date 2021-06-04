@@ -1,3 +1,5 @@
+import shelve
+from datetime import date
 from os import path
 from urllib.parse import urlparse
 
@@ -21,8 +23,14 @@ def writetofile(apath: str, filename: str, extension: str, content: str) -> None
 
 
 def scrape(url: str):
-    scraper = cloudscraper.create_scraper()
-    return scraper.get(url)
+    with shelve.open('out/jar') as jar:
+        key = f'{url}-{str(date.today())}'
+        if key in jar:
+            scraper = jar[key]
+        else:
+            scraper = cloudscraper.create_scraper().get(url)
+            jar[key] = scraper
+    return scraper
 
 
 def pbookpage(html: bs4.BeautifulSoup, context):
