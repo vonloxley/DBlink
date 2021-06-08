@@ -58,8 +58,11 @@ def pbookpage(html: bs4.BeautifulSoup, context):
         html (bs4.BeautifulSoup): BeautifulSoup object to parse
         context (dict): Parsercontext with title and header keys
     """
-    for ha1 in html.find_all('h1'):
-        ha1.name = 'h2'
+    for tag in html.find_all():
+        if tag.name == 'h1':
+            tag.name = 'h2'
+        del tag['style']
+
     a = Airium()
     a('<!DOCTYPE html>')
     with a.html(lang="de"):
