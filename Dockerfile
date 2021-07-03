@@ -1,18 +1,23 @@
-FROM python:3.9 AS builder
-COPY requirements.txt .
 
-# install dependencies to the local user directory (eg. /root/.local)
+FROM python:3.9 AS builder
+
+RUN pip install --upgrade pip
+
+RUN adduser --disabled-password worker
+USER worker
+WORKDIR /home/worker
+
+COPY --chown=worker:worker requirements.txt requirements.txt
 RUN pip install --user -r requirements.txt
 
 # second unnamed stage
 FROM python:3.9-slim
-WORKDIR /code
+RUN adduser --disabled-password worker
+USER worker
+WORKDIR /home/worker
 
 # copy only the dependencies installation from the 1st stage image
-COPY --from=builder /root/.local /root/.local
-COPY ./dblink.py .
-
-# update PATH environment variable
-ENV PATH=/root/.local:$PATH
+COPY --from=builder /home/worker/.local .local
+COPY --chown=worker:worker ./dblink.py .
 
 CMD [ "python", "./dblink.py" ]
