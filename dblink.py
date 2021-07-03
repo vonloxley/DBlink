@@ -65,12 +65,12 @@ def pbookpage(html: bs4.BeautifulSoup, context):
 
     a = Airium()
     a('<!DOCTYPE html>')
-    with a.html(lang="de"):
+    with a.html(lang=context['lang']):
         with a.head():
             with a.title():
                 a(context['title'])
             with a.style():
-                a('p {width: 80ex; line-height: 1.3; font-size: 120%;}')
+                a('p {width: 80ex; line-height: 1.3; font-size: 120%; hyphens: auto;}')
         with a.body():
             a(context['header'])
             for d in html('div'):
@@ -103,7 +103,7 @@ def pstartpage(html: bs4.BeautifulSoup, context):
             pass
 
 
-def get_blink(bookurl: str):
+def get_blink(bookurl: str, lang: str='de'):
     """Downloads a blink.
 
     Args:
@@ -112,6 +112,7 @@ def get_blink(bookurl: str):
     context = {}
     up = urlparse(bookurl)
     context['BaseUrl'] = f'{up.scheme}://{up.netloc}'
+    context['lang'] = lang
     blink = scrape(bookurl)
     html = bs4.BeautifulSoup(blink.text, 'html.parser')
 
@@ -119,8 +120,8 @@ def get_blink(bookurl: str):
 
 
 def main():
-    get_blink('https://www.blinkist.com/de/nc/daily')
-    get_blink('https://www.blinkist.com/en/nc/daily')
+    get_blink('https://www.blinkist.com/de/nc/daily', 'de')
+    get_blink('https://www.blinkist.com/en/nc/daily', 'en')
 
 
 if __name__ == '__main__':
