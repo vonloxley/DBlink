@@ -3,7 +3,7 @@ FROM python:3.9 AS builder
 
 RUN pip install --upgrade pip
 
-RUN adduser --disabled-password worker
+RUN adduser --disabled-password --gecos "" worker
 USER worker
 WORKDIR /home/worker
 
@@ -12,7 +12,7 @@ RUN pip install --user -r requirements.txt
 
 # second unnamed stage
 FROM python:3.9-slim
-RUN adduser --disabled-password worker
+RUN adduser --disabled-password --gecos "" worker
 USER worker
 WORKDIR /home/worker
 
