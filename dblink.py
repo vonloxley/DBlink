@@ -8,8 +8,10 @@ import cloudscraper
 from airium import Airium
 
 
-def writetofile(apath: str, filename: str, extension: str, content: str) -> None:
-    """Write content to a new file. Filename will be constructed from filename and extension.
+def writetofile(
+        apath: str, filename: str, extension: str, content: str) -> None:
+    """Write content to a new file. Filename will be constructed from
+    filename and extension.
     If the file exists a number will be appended to filename.
 
     Args:
@@ -52,12 +54,19 @@ def scrape(url: str):
 
 
 def pbookpage(html: bs4.BeautifulSoup, context):
-    """Parses the book page, generates and saves a simple html-file on `out/title.html`.
+    """Parses the book page, generates and saves a simple html-file
+    on `out/title.html`.
 
     Args:
         html (bs4.BeautifulSoup): BeautifulSoup object to parse
         context (dict): Parsercontext with title and header keys
     """
+    style = '''p {
+                width: 80ex;
+                line-height: 1.3;
+                font-size: 120%;
+                hyphens: auto;}
+            '''
     for tag in html.find_all():
         if tag.name == 'h1':
             tag.name = 'h2'
@@ -70,7 +79,7 @@ def pbookpage(html: bs4.BeautifulSoup, context):
             with a.title():
                 a(context['title'])
             with a.style():
-                a('p {width: 80ex; line-height: 1.3; font-size: 120%; hyphens: auto;}')
+                a(style)
         with a.body():
             a(context['header'])
             for d in html('div'):
@@ -97,13 +106,17 @@ def pstartpage(html: bs4.BeautifulSoup, context):
     for a in html('a'):
         try:
             if 'cta' in a['class']:
-                pbookpage(bs4.BeautifulSoup(
-                    scrape(context['BaseUrl'] + a['href']).text, 'html.parser'), context)
+                url = context['BaseUrl'] + a['href']
+                pbookpage(
+                    bs4.BeautifulSoup(
+                        scrape(url).text, 'html.parser'
+                    ), context
+                )
         except KeyError:
             pass
 
 
-def get_blink(bookurl: str, lang: str='de'):
+def get_blink(bookurl: str, lang: str = 'de'):
     """Downloads a blink.
 
     Args:
