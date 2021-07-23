@@ -76,6 +76,7 @@ def pbookpage(html: bs4.BeautifulSoup, context):
     a('<!DOCTYPE html>')
     with a.html(lang=context['lang']):
         with a.head():
+            a.meta(name="viewport", content="width=device-width, initial-scale=1")
             with a.title():
                 a(context['title'])
             with a.style():
