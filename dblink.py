@@ -61,8 +61,11 @@ def pbookpage(html: bs4.BeautifulSoup, context):
         html (bs4.BeautifulSoup): BeautifulSoup object to parse
         context (dict): Parsercontext with title and header keys
     """
-    style = '''p {
-                width: 80ex;
+    style = '''h1, h2 {
+                max-width: 80ex;
+            }
+            p {
+                max-width: 80ex;
                 line-height: 1.3;
                 font-size: 120%;
                 hyphens: auto;}
